@@ -1,0 +1,387 @@
+/* ==========================================================================
+   DHAKKAN'S TREKS & TOURS - SINGLE PAGE MAINTENANCE & COMING SOON
+   Theme: Midnight Alpine Glow, Starry Canvas, Rotating Compass & Gold Accents
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+:root {
+  --bg-primary: #060a11;
+  --bg-card: rgba(12, 22, 38, 0.65);
+  --bg-glass: rgba(255, 255, 255, 0.05);
+
+  --accent-gold: #f59e0b;
+  --accent-gold-light: #fbbf24;
+  --accent-gold-glow: rgba(245, 158, 11, 0.45);
+  --accent-cyan: #38bdf8;
+  --accent-cyan-glow: rgba(56, 189, 248, 0.35);
+  --accent-emerald: #10b981;
+
+  --border-glass: rgba(255, 255, 255, 0.1);
+  --border-gold: rgba(245, 158, 11, 0.35);
+
+  --text-main: #f8fafc;
+  --text-muted: #94a3b8;
+  --text-dim: #64748b;
+
+  --font-brand: 'Cinzel', serif;
+  --font-heading: 'Outfit', sans-serif;
+  --font-body: 'Plus Jakarta Sans', sans-serif;
+
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  --transition-bounce: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* ==========================================================================
+   RESET & VIEWPORT BASE
+   ========================================================================== */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Fixed Background Elements */
+#star-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.bg-mountains {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: 
+    radial-gradient(ellipse at 50% 20%, rgba(245, 158, 11, 0.1) 0%, transparent 65%),
+    radial-gradient(ellipse at 80% 70%, rgba(56, 189, 248, 0.08) 0%, transparent 55%),
+    linear-gradient(180deg, rgba(6, 10, 17, 0.55) 0%, rgba(6, 10, 17, 0.9) 75%, var(--bg-primary) 100%),
+    url('../images/hero_bg.jpg') center top / cover no-repeat;
+  z-index: 1;
+  opacity: 0.75;
+}
+
+/* Single Page Container (Fits cleanly in 100vh) */
+.maintenance-screen {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 2rem 1.5rem 1rem;
+  text-align: center;
+}
+
+/* ==========================================================================
+   CENTER STAGE & GLOWING LOGO
+   ========================================================================== */
+.center-content {
+  width: 100%;
+  max-width: 900px;
+  margin: auto 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.5rem 0;
+}
+
+/* Compass Logo presentation */
+.compass-logo-wrapper {
+  position: relative;
+  width: clamp(230px, 32vh, 320px);
+  height: clamp(230px, 32vh, 320px);
+  margin-bottom: 1.15rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.glow-backdrop {
+  position: absolute;
+  width: 125%;
+  height: 125%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(245, 158, 11, 0.5) 0%, rgba(56, 189, 248, 0.22) 48%, transparent 72%);
+  filter: blur(35px);
+  animation: glow-breathe 4s infinite alternate ease-in-out;
+}
+
+@keyframes glow-breathe {
+  0% { transform: scale(0.88); opacity: 0.65; }
+  100% { transform: scale(1.15); opacity: 1; }
+}
+
+.compass-ring {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.ring-outer {
+  width: 100%;
+  height: 100%;
+  border: 2px dashed rgba(245, 158, 11, 0.65);
+  animation: spin-clockwise 35s linear infinite;
+}
+
+.ring-inner {
+  width: 85%;
+  height: 85%;
+  border: 1.5px solid rgba(56, 189, 248, 0.4);
+  animation: spin-counter-clockwise 25s linear infinite;
+}
+
+@keyframes spin-clockwise {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-counter-clockwise {
+  from { transform: rotate(360deg); }
+  to { transform: rotate(0deg); }
+}
+
+.logo-circle {
+  position: relative;
+  z-index: 5;
+  width: 78%;
+  height: 78%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.4s ease;
+}
+
+.compass-logo-wrapper:hover .logo-circle {
+  transform: scale(1.06);
+}
+
+.dhakkans-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 20px rgba(245, 158, 11, 0.85)) drop-shadow(0 0 35px rgba(0, 0, 0, 0.95));
+}
+
+/* ==========================================================================
+   TEXT CONTENT & HEADINGS
+   ========================================================================== */
+.badge-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.9rem;
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: var(--accent-gold-light);
+  font-family: var(--font-brand);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  margin-bottom: 0.65rem;
+}
+
+.main-title {
+  font-family: var(--font-heading);
+  font-size: clamp(2rem, 4.8vw, 3.6rem);
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 0.45rem;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 30px rgba(255, 255, 255, 0.15);
+}
+
+.coming-soon-text {
+  font-family: var(--font-heading);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+  font-weight: 600;
+  color: #e2e8f0;
+  margin-bottom: 0.65rem;
+}
+
+.gold-gradient {
+  background: linear-gradient(135deg, #ffffff 10%, #fbbf24 60%, #f59e0b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 800;
+  text-shadow: 0 0 25px rgba(245, 158, 11, 0.5);
+}
+
+.sub-description {
+  font-size: clamp(0.85rem, 1.3vw, 0.98rem);
+  color: var(--text-muted);
+  max-width: 640px;
+  line-height: 1.55;
+  margin: 0 auto 1.35rem;
+}
+
+.sub-description strong {
+  color: #ffffff;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   CONTACT ACTIONS & BUTTONS
+   ========================================================================== */
+.contact-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.1rem;
+  flex-wrap: wrap;
+}
+
+.btn-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.7rem;
+  padding: 0.9rem 1.75rem;
+  border-radius: 14px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: var(--transition-bounce);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  cursor: pointer;
+}
+
+/* WhatsApp */
+.btn-wa {
+  background: linear-gradient(135deg, #25d366 0%, #128c7e 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 25px rgba(37, 211, 102, 0.4);
+}
+
+.btn-wa:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 14px 35px rgba(37, 211, 102, 0.6);
+  color: #ffffff;
+}
+
+/* Phone Call */
+.btn-phone {
+  background: rgba(14, 25, 42, 0.85);
+  color: #ffffff;
+  border: 1px solid var(--border-gold);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+}
+
+.btn-phone:hover {
+  background: rgba(245, 158, 11, 0.2);
+  border-color: var(--accent-gold);
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 12px 30px rgba(245, 158, 11, 0.35);
+  color: #ffffff;
+}
+
+.btn-phone i {
+  color: var(--accent-gold-light);
+}
+
+/* Instagram */
+.btn-insta {
+  background: linear-gradient(135deg, #833ab4 0%, #fd1d1d 50%, #fcb045 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  box-shadow: 0 8px 25px rgba(225, 48, 108, 0.4);
+}
+
+.btn-insta:hover {
+  transform: translateY(-4px) scale(1.03);
+  box-shadow: 0 14px 35px rgba(225, 48, 108, 0.6);
+  color: #ffffff;
+}
+
+/* ==========================================================================
+   BOTTOM BAR & FOOTER
+   ========================================================================== */
+.bottom-bar {
+  width: 100%;
+  max-width: 1100px;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  font-size: 0.82rem;
+  color: var(--text-dim);
+}
+
+/* Toast Message */
+.toast-msg {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  background: rgba(14, 25, 42, 0.95);
+  border: 1px solid var(--accent-gold);
+  color: #ffffff;
+  padding: 0.75rem 1.25rem;
+  border-radius: 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 25px rgba(245, 158, 11, 0.3);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  transform: translateX(120%);
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.toast-msg.show {
+  transform: translateX(0);
+}
+
+/* ==========================================================================
+   RESPONSIVE DESIGN
+   ========================================================================== */
+@media (max-width: 640px) {
+  .maintenance-screen {
+    padding: 1.25rem 1rem 1rem;
+  }
+  .compass-logo-wrapper {
+    width: 250px;
+    height: 250px;
+    margin-bottom: 1.25rem;
+  }
+  .glow-backdrop {
+    width: 290px;
+    height: 290px;
+  }
+  .logo-circle {
+    width: 190px;
+    height: 190px;
+  }
+  .contact-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 300px;
+    gap: 0.85rem;
+  }
+  .btn-action {
+    width: 100%;
+    justify-content: center;
+    padding: 0.8rem 1.25rem;
+  }
+}
