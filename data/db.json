@@ -1,0 +1,28 @@
+{
+  "settings": {
+    "brandName": "DHAKKAN'S",
+    "heroBadge": "Boutique Tours & Soulful Nature Treks Across India",
+    "heroTitle": "Find Yourself. Breathe Freely. Never In A Rush.",
+    "heroDesc": "Curated, slow-paced premium tours and serene nature treks across India — from mist-laden Sahyadri weekend trails and gentle Himalayan valleys to private Kerala backwaters and royal desert glamping. Crafted for travelers who value peace, comfort, and soulful experiences over crowded rush.",
+    "statExpeditions": "50",
+    "statSuccess": "100",
+    "statYears": "1.2",
+    "statTrekkers": "900+",
+    "phone": "+91 79001 08067",
+    "email": "info@dhakkans.com",
+    "atulPhone": "+91 70393 47132",
+    "address": "Dhanjiwadi, Rani Sati Marg, Malad, Mumbai - 400097, Maharashtra, India",
+    "timings": "Monday – Saturday · 9:00 AM – 7:00 PM IST",
+    "philosophyTitle": "Travel at the speed of peace — never in a rush.",
+    "philosophyDesc": "We replace chaotic itineraries and crowded tourist rush with mindful pacing, handpicked comfortable stays, and soulful natural beauty across India."
+  },
+  "treks": [],
+  "gallery": [],
+  "bookings": [],
+  "inquiries": [],
+  "auth": {
+    "user": "admin",
+    "passHash": "2793636809a93caedf7717a9ae71c3d358e3958b76c7d6a9dda1284b0b1384ea"
+  },
+  "lastUpdated": "2026-11-14T10:50:00.000Z"
+}

@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Operations Desk — Dhakkan's Expeditions</title>
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
+
+  <!-- Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <!-- Admin Stylesheet -->
+  <link rel="stylesheet" href="css/admin.css?v=20261011_v10">
+</head>
+
+<body class="admin-body">
+
+  <!-- =================== LOGIN OVERLAY =================== -->
+  <div class="login-overlay" id="loginOverlay">
+    <div class="login-card">
+      <div class="logo-area">
+        <img src="assets/images/logo.png" alt="Dhakkan's Logo">
+        <span
+          style="font-family: var(--font-heading); font-size: 1.3rem; font-weight: 700; letter-spacing: 0.06em;">DHAKKAN'S</span>
+      </div>
+      <h2>Base Camp Admin</h2>
+      <p>Enter your credentials to manage expeditions, bookings, gallery notes, and live site content.</p>
+
+      <div class="form-group" style="text-align: left;">
+        <label>Admin Username</label>
+        <input type="text" id="loginUser" placeholder="e.g. admin" autocomplete="username">
+      </div>
+      <div class="form-group" style="text-align: left; margin-bottom: 22px;">
+        <label>Password</label>
+        <div style="position: relative; display: flex; align-items: center;">
+          <input type="password" id="loginPass" placeholder="Enter password" autocomplete="current-password" style="padding-right: 42px; width: 100%;">
+          <button type="button" id="toggleLoginPass" aria-label="Toggle password visibility" style="position: absolute; right: 10px; background: none; border: none; cursor: pointer; color: var(--text-muted); padding: 4px; display: inline-flex; align-items: center; justify-content: center;">
+            <svg id="eyeIcon" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+            </svg>
+          </button>
+        </div>
+      </div>
+      <button class="btn-login" id="btnLogin">Access Command Desk →</button>
+    </div>
+  </div>
+
+  <!-- =================== SIDEBAR NAVIGATION =================== -->
+  <aside class="admin-sidebar" id="adminSidebar">
+    <div class="sidebar-header">
+      <img src="assets/images/logo.png" alt="Dhakkan's Logo">
+      <div class="title">DHAKKAN<b>'S</b> <span class="badge">HQ</span></div>
+    </div>
+
+    <nav class="sidebar-nav">
+      <button class="nav-item active" data-tab="dashboard">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="12" width="4" height="9" rx="1"/><rect x="10" y="7" width="4" height="14" rx="1"/><rect x="17" y="3" width="4" height="18" rx="1"/></svg></span> Dashboard
+      </button>
+      <button class="nav-item" data-tab="treks">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg></span> Expeditions &amp; Routes
+      </button>
+      <button class="nav-item" data-tab="gallery">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg></span> Field Notes &amp; Gallery
+      </button>
+      <button class="nav-item" data-tab="uploader">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></span> Image Uploader &amp; CDN
+      </button>
+      <button class="nav-item" data-tab="bookings">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></span> Trekker Reservations
+      </button>
+      <button class="nav-item" data-tab="inquiries">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></span> Contact Dispatches
+      </button>
+      <button class="nav-item" data-tab="github">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="18" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><path d="M6 9v12"/><path d="M18 15a9 9 0 0 0-9-9H6"/></svg></span> GitHub Cloud Sync
+      </button>
+      <button class="nav-item" data-tab="settings">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg></span> Site Settings &amp; Stats
+      </button>
+      <button class="nav-item" data-tab="backup">
+        <span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg></span> Data Backup &amp; Reset
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <a class="btn-view-site" href="index.html" target="_blank">
+        <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;display:inline-block;vertical-align:-1px;margin-right:6px;"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg></span> View Live Website ↗
+      </a>
+    </div>
+  </aside>
+
+  <!-- =================== MAIN WORKSPACE =================== -->
+  <main class="admin-main">
+
+    <!-- Top Bar -->
+    <header class="admin-topbar">
+      <div class="topbar-left">
+        <button class="menu-toggle" id="adminMenuToggle" aria-label="Toggle Sidebar"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+        <div class="topbar-title">
+          <h1 id="currentTabTitle">Overview &amp; Operations Dashboard</h1>
+          <span id="dbSyncStatus" style="cursor:pointer;" title="Click to manage GitHub Synchronization"><span
+              id="githubStatusDot"
+              style="display:inline-block; width:8px; height:8px; border-radius:50%; background:#22c55e; margin-right:6px; box-shadow:0 0 8px #22c55e;"></span><span
+              id="dbSyncText">GitHub Storage Active · DhakkansGroup (100% Free &amp; Unlimited)</span></span>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <div class="user-pill">
+          <span class="dot"></span>
+          <span>Expedition Commander</span>
+        </div>
+        <button class="btn-logout" id="btnLogout">Sign Out</button>
+      </div>
+    </header>
+
+    <!-- Main Content Workspace -->
+    <div class="admin-content">
+
+      <!-- ================= TAB 1: DASHBOARD OVERVIEW ================= -->
+      <div class="tab-pane active" id="pane-dashboard">
+        <!-- Metric Counters -->
+        <div class="metrics-grid">
+          <div class="metric-card">
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg></div>
+            <div>
+              <div class="val" id="metricTreks">6</div>
+              <div class="lbl">Active Expeditions</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>
+            <div>
+              <div class="val" id="metricBookings">0</div>
+              <div class="lbl">Total Reservations</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+            <div>
+              <div class="val" id="metricInquiries">0</div>
+              <div class="lbl">Inquiry Messages</div>
+            </div>
+          </div>
+          <div class="metric-card">
+            <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg></div>
+            <div>
+              <div class="val" id="metricRevenue">₹0</div>
+              <div class="lbl">Reservation Value</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Quick Actions & Recent Activity -->
+        <div class="admin-card">
+          <div class="card-header-row">
+            <h2>Recent Trekker Reservations</h2>
+            <button class="btn-primary-action"
+              onclick="document.querySelector('[data-tab=treks]').click(); openAddTrekModal();">
+              + New Expedition Route
+            </button>
+          </div>
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Trekker Name</th>
+                  <th>Expedition</th>
+                  <th>Total Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recentBookingsBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 2: EXPEDITIONS (TREKS) ================= -->
+      <div class="tab-pane" id="pane-treks">
+
+        <div class="admin-card">
+          <div class="card-header-row">
+            <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+              <h2>Expedition Catalogue</h2>
+              <input type="text" id="trekAdminSearch" placeholder="Filter expeditions…"
+                style="padding:6px 14px; border-radius:20px; border:1px solid var(--border-subtle); font-size:0.84rem; outline:none;">
+            </div>
+            <button class="btn-primary-action" onclick="openAddTrekModal()">
+              + Add Expedition Route
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Cover</th>
+                  <th>Expedition Details</th>
+                  <th>Region</th>
+                  <th>Price</th>
+                  <th>Duration</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="treksTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 3: FIELD NOTES & GALLERY ================= -->
+      <div class="tab-pane" id="pane-gallery">
+        <div class="admin-card">
+          <div class="card-header-row">
+            <h2>Field Notes &amp; Photo Journal</h2>
+            <button class="btn-primary-action" onclick="openAddGalleryModal()">
+              + Add Photograph
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>Preview</th>
+                  <th>Title &amp; Narrative</th>
+                  <th>Location</th>
+                  <th>Category</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="galleryTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB: COMMON IMAGE UPLOADER & CDN ================= -->
+      <div class="tab-pane" id="pane-uploader">
+        <!-- Main Uploader Card -->
+        <div class="admin-card" style="margin-bottom:24px;">
+          <div class="card-header-row" style="margin-bottom:16px;">
+            <div>
+              <h2 style="display:flex; align-items:center; gap:10px;">
+                <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#2563eb" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+                Common Image Uploader &amp; CDN Link Generator
+              </h2>
+              <span style="font-size:0.84rem; color:var(--text-muted)">
+                Upload photos directly to your cloud storage. Instant, permanent CDN URLs ready to use across both <b>Expeditions &amp; Routes</b> and <b>Field Notes &amp; Photo Journal</b>.
+              </span>
+            </div>
+          </div>
+
+          <!-- Dropzone area -->
+          <div id="commonDropzone" style="border:2px dashed #94a3b8; border-radius:12px; background:#f8fafc; padding:36px 20px; text-align:center; transition:all 0.2s ease; cursor:pointer;" onclick="document.getElementById('commonPhotoFileInput').click()">
+            <input type="file" id="commonPhotoFileInput" accept="image/*" style="display:none;" onchange="handleCommonPhotoUpload(this)">
+            <div style="width:56px; height:56px; border-radius:50%; background:#e0f2fe; color:#0284c7; display:flex; align-items:center; justify-content:center; margin:0 auto 14px auto;">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            </div>
+            <h3 style="margin:0 0 6px 0; font-size:1.05rem; color:var(--text-dark); font-weight:700;">
+              Click to browse, or drag &amp; drop your photo here
+            </h3>
+            <p style="margin:0; font-size:0.82rem; color:var(--text-muted);">
+              Supports JPG, PNG, WEBP, GIF · Automatically optimized for high-speed delivery
+            </p>
+            <div style="margin-top:16px;">
+              <button type="button" class="btn-primary-action" style="padding:9px 20px; font-size:0.86rem; pointer-events:none;">
+                Choose Photo from Device
+              </button>
+            </div>
+          </div>
+
+          <!-- Upload Status Indicator (Hidden by default) -->
+          <div id="commonUploadProgress" style="display:none; margin-top:16px; padding:14px; background:#eff6ff; border-radius:8px; border:1px solid #bfdbfe; text-align:center;">
+            <div style="display:inline-flex; align-items:center; gap:10px; color:#1d4ed8; font-weight:600; font-size:0.9rem;">
+              <svg class="spinner" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" style="animation:spin 1s linear infinite;"><circle cx="12" cy="12" r="10" stroke-opacity="0.25"/><path d="M12 2a10 10 0 0 1 10 10"/></svg>
+              <span>Optimizing image and uploading to cloud storage...</span>
+            </div>
+          </div>
+
+          <!-- Upload Result Display (Hidden until photo uploaded) -->
+          <div id="commonUploadResult" style="display:none; margin-top:20px; padding:18px; background:#f0fdf4; border-radius:10px; border:1px solid #bbf7d0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; flex-wrap:wrap; gap:8px;">
+              <span id="commonResultBadge" style="display:inline-flex; align-items:center; gap:6px; font-size:0.85rem; font-weight:700; color:#15803d;">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                Upload Successful! Direct Image URL Ready
+              </span>
+              <span id="commonStorageType" style="font-size:0.75rem; background:#dcfce7; color:#166534; padding:3px 10px; border-radius:12px; font-weight:600; border:1px solid #86efac;">
+                Google Drive Storage
+              </span>
+            </div>
+
+            <div style="display:flex; gap:18px; align-items:center; flex-wrap:wrap;">
+              <div style="position:relative; width:120px; height:80px; flex-shrink:0;">
+                <img id="commonPreviewImg" src="" alt="Uploaded Image" style="width:100%; height:100%; object-fit:cover; border-radius:8px; border:2px solid #86efac; box-shadow:0 2px 6px rgba(0,0,0,0.06);">
+              </div>
+
+              <div style="flex:1; min-width:260px;">
+                <label style="display:block; font-size:0.76rem; font-weight:700; color:#166534; margin-bottom:4px; text-transform:uppercase; letter-spacing:0.5px;">
+                  Generated Image CDN URL:
+                </label>
+                <div style="display:flex; gap:8px;">
+                  <input type="text" id="commonUrlOutput" readonly style="font-family:monospace; font-size:0.86rem; background:#fff; border:1px solid #86efac; color:#14532d; font-weight:600; padding:9px 12px; border-radius:6px; flex:1;" onclick="this.select()">
+                  <button type="button" class="btn-primary-action" id="btnCopyCommonUrl" onclick="copyCommonUrl()" style="padding:9px 18px; font-size:0.85rem; white-space:nowrap; display:inline-flex; align-items:center; gap:6px; background:#16a34a; border-color:#16a34a;">
+                    <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                    <span>Copy URL</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Quick Action 1-Click Destinations -->
+            <div style="margin-top:16px; padding-top:14px; border-top:1px dashed #86efac; display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+              <span style="font-size:0.8rem; font-weight:700; color:#166534;">Use This Image Right Now:</span>
+              <button type="button" class="btn-secondary-action" onclick="useInExpeditions()" style="background:#fff; font-size:0.82rem; padding:7px 14px; display:inline-flex; align-items:center; gap:6px; border-color:#86efac; color:#166534; font-weight:600;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>
+                Use in Expeditions &amp; Routes →
+              </button>
+              <button type="button" class="btn-secondary-action" onclick="useInFieldNotes()" style="background:#fff; font-size:0.82rem; padding:7px 14px; display:inline-flex; align-items:center; gap:6px; border-color:#86efac; color:#166534; font-weight:600;">
+                <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+                Use in Field Notes &amp; Photo Journal →
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Google Drive Cloud Storage Settings Card -->
+        <div class="admin-card" style="background:#f8fafc; border:1px solid #e2e8f0;">
+          <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:8px;">
+            <div style="display:flex; align-items:center; gap:8px;">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#2563eb" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+              <h3 style="margin:0; font-size:0.95rem; color:var(--text-dark);">
+                Google Drive Storage Engine (<span style="color:#2563eb;">dhakkanstreksandtours@gmail.com</span>)
+              </h3>
+            </div>
+            <span style="font-size:0.75rem; background:#fee2e2; color:#991b1b; padding:2px 8px; border-radius:10px; font-weight:600;">
+              Tab Session Only · Never Saved in Browser Disk
+            </span>
+          </div>
+          <p style="margin:0 0 10px 0; font-size:0.8rem; color:var(--text-muted);">
+            Paste your Google Apps Script Web App URL below to upload directly to your Google Drive. When you close this browser tab, this URL is automatically and completely cleared from memory.
+          </p>
+
+          <div style="padding-top:10px; border-top:1px dashed #cbd5e1;">
+            <label style="font-size:0.78rem; font-weight:700; color:var(--text-dark); display:block; margin-bottom:5px;">Google Apps Script Web App URL (Active Session):</label>
+            <div style="display:flex; gap:8px;">
+              <input type="url" id="gdriveWebhookInput" placeholder="https://script.google.com/macros/s/AKfycbx.../exec" style="font-family:monospace; font-size:0.82rem; flex:1;" onchange="saveGDriveWebhook()">
+              <button type="button" class="btn-primary-action" onclick="saveGDriveWebhook()" style="padding:6px 16px; font-size:0.82rem;">Set for Session</button>
+              <button type="button" class="btn-secondary-action" onclick="clearGDriveWebhook()" style="padding:6px 12px; font-size:0.82rem; color:#b91c1c; border-color:rgba(185,28,28,0.3);">Clear</button>
+            </div>
+            <small style="color:var(--text-muted); font-size:0.75rem; display:block; margin-top:6px;">
+              🔒 Not saved in permanent browser storage. Automatically wiped when you close the tab.
+            </small>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 4: RESERVATIONS ================= -->
+      <div class="tab-pane" id="pane-bookings">
+        <div class="admin-card">
+          <div class="card-header-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h2>Trekker Reservations</h2>
+              <span style="font-size:0.8rem; color:var(--text-muted)">Live submissions dispatched straight to official email desk (0 build quota used)</span>
+            </div>
+            <button type="button" class="btn-secondary-action" onclick="exportBookingsCSV()" style="padding:6px 14px; font-size:0.82rem; display:inline-flex; align-items:center; gap:6px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export to CSV (Excel)
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Lead Trekker</th>
+                  <th>Expedition</th>
+                  <th>Departure Date</th>
+                  <th>Trekkers</th>
+                  <th>Total Cost</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="bookingsTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 5: CONTACT INQUIRIES ================= -->
+      <div class="tab-pane" id="pane-inquiries">
+        <div class="admin-card">
+          <div class="card-header-row" style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+            <div>
+              <h2>Base Camp Contact Messages</h2>
+              <span style="font-size:0.8rem; color:var(--text-muted)">Direct inquiries dispatched straight to official email desk (0 build quota used)</span>
+            </div>
+            <button type="button" class="btn-secondary-action" onclick="exportInquiriesCSV()" style="padding:6px 14px; font-size:0.82rem; display:inline-flex; align-items:center; gap:6px;">
+              <svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Export to CSV (Excel)
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="admin-table">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Sender</th>
+                  <th>Subject</th>
+                  <th>Message</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="inquiriesTableBody">
+                <!-- Populated dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 6: SITE SETTINGS & STATS ================= -->
+      <div class="tab-pane" id="pane-settings">
+        <div class="admin-card">
+          <div class="card-header-row">
+            <h2>Website Identity &amp; Content Customizer</h2>
+            <button class="btn-primary-action" onclick="saveSiteSettings()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save All Changes
+            </button>
+          </div>
+
+          <h3 style="font-size:1.05rem; margin-bottom:14px; color:var(--cedar-brown)">1. Brand &amp; Contact Coordinates
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Brand Name</label>
+              <input type="text" id="sBrandName" placeholder="DHAKKAN'S">
+            </div>
+            <div class="form-group">
+              <label>Official Dhakkans Hotline (Tours &amp; Travels)</label>
+              <input type="text" id="sPhone" placeholder="+91 79001 08067">
+            </div>
+            <div class="form-group">
+              <label>Official Email ID</label>
+              <input type="email" id="sEmail" placeholder="info@dhakkans.com">
+            </div>
+            <div class="form-group">
+              <label>Office Timings</label>
+              <input type="text" id="sTimings" placeholder="Monday – Saturday · 9:00 AM – 7:00 PM IST">
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Base Camp HQ Address</label>
+            <textarea id="sAddress"
+              placeholder="Dhanjiwadi, Rani Sati Marg, Malad, Mumbai - 400097, Maharashtra, India"></textarea>
+          </div>
+
+          <hr style="border:none; border-top:1px solid var(--border-subtle); margin:24px 0;">
+
+          <h3 style="font-size:1.05rem; margin-bottom:14px; color:var(--cedar-brown)">2. Hero Section Headlines (Home
+            Page)</h3>
+          <div class="form-group">
+            <label>Badge Tagline</label>
+            <input type="text" id="sHeroBadge" placeholder="High-Altitude & Alpine Trek Specialists">
+          </div>
+          <div class="form-group">
+            <label>Hero Main Title</label>
+            <input type="text" id="sHeroTitle" placeholder="Walk Where The Clouds Begin.">
+          </div>
+          <div class="form-group">
+            <label>Hero Subtitle Narrative</label>
+            <textarea id="sHeroDesc" placeholder="Curated, small-group expeditions..."></textarea>
+          </div>
+
+          <hr style="border:none; border-top:1px solid var(--border-subtle); margin:24px 0;">
+
+          <h3 style="font-size:1.05rem; margin-bottom:14px; color:var(--cedar-brown)">3. Home Page Animated Stats
+            Counters</h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Expeditions / Year</label>
+              <input type="text" id="sStatExp" placeholder="128">
+            </div>
+            <div class="form-group">
+              <label>Summit Success Rate (%)</label>
+              <input type="text" id="sStatSucc" placeholder="98">
+            </div>
+            <div class="form-group">
+              <label>Years Guided Experience</label>
+              <input type="text" id="sStatYrs" placeholder="15">
+            </div>
+            <div class="form-group">
+              <label>Happy Trekkers (+)</label>
+              <input type="text" id="sStatTrk" placeholder="9800">
+            </div>
+          </div>
+
+          <hr style="border:none; border-top:1px solid var(--border-subtle); margin:24px 0;">
+
+          <h3 style="font-size:1.05rem; margin-bottom:14px; color:var(--cedar-brown)">4. Admin Security &amp; Password
+          </h3>
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Admin Username</label>
+              <input type="text" id="sAuthUser" placeholder="admin">
+            </div>
+            <div class="form-group">
+              <label>New Password (leave blank to keep current)</label>
+              <input type="password" id="sAuthNewPass" placeholder="Enter new password">
+            </div>
+          </div>
+
+          <div style="margin-top:20px;">
+            <button class="btn-primary-action" onclick="saveSiteSettings()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save All Changes
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= TAB 7: GITHUB CLOUD SYNC & PERSISTENCE ================= -->
+      <div class="tab-pane" id="pane-github">
+        <div class="admin-card">
+          <div class="card-header-row">
+            <div>
+              <h2>GitHub Cloud Storage &amp; Live Synchronization</h2>
+              <p style="color:var(--text-muted); font-size:0.88rem; margin-top:4px;">
+                100% Free Forever &middot; Zero Paid Quotas &middot; Powered by <a
+                  href="https://github.com/DhakkansGroup" target="_blank"
+                  style="color:var(--cedar-brown); font-weight:700;">DhakkansGroup on GitHub</a>
+              </p>
+            </div>
+            <div id="githubStatusBadge" class="cloud-badge connected"
+              style="padding:6px 14px; border-radius:20px; font-size:0.82rem; font-weight:700; display:flex; align-items:center; gap:8px; background:rgba(34,197,94,0.12); color:#15803d; border:1px solid rgba(34,197,94,0.3);">
+              <span class="dot"
+                style="width:8px; height:8px; border-radius:50%; background:#22c55e; box-shadow:0 0 8px #22c55e;"></span>
+              <span id="githubStatusLabel">GitHub Connected</span>
+            </div>
+          </div>
+
+          <!-- GitHub Repository Configuration -->
+          <div class="cloud-config-grid"
+            style="margin-top:20px; background:var(--bg-card-subtle); padding:20px; border-radius:12px; border:1px solid var(--border-subtle);">
+            <div
+              style="display:grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap:14px; margin-bottom:14px;">
+              <div class="form-group" style="margin:0;">
+                <label style="font-weight:700; color:var(--text-dark);">
+                  GitHub Owner / Organization <span style="color:#ef4444;">*</span>
+                </label>
+                <input type="text" id="ghOwnerInput" value="DhakkansGroup" placeholder="e.g. DhakkansGroup"
+                  style="font-family:monospace; font-size:0.88rem;">
+              </div>
+
+              <div class="form-group" style="margin:0;">
+                <label style="font-weight:700; color:var(--text-dark);">
+                  Repository Name <span style="color:#ef4444;">*</span>
+                </label>
+                <input type="text" id="ghRepoInput" value="original-site" placeholder="e.g. original-site"
+                  style="font-family:monospace; font-size:0.88rem;">
+              </div>
+
+              <div class="form-group" style="margin:0;">
+                <label style="font-weight:700; color:var(--text-dark);">
+                  Branch Name
+                </label>
+                <input type="text" id="ghBranchInput" value="main" placeholder="e.g. main"
+                  style="font-family:monospace; font-size:0.88rem;">
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-bottom:18px;">
+              <label
+                style="font-weight:700; color:var(--text-dark); display:flex; justify-content:space-between; align-items:center;">
+                <span>GitHub Personal Access Token (PAT) <small
+                    style="color:var(--text-muted); font-weight:400;">(Optional for 1-click direct
+                    commits)</small></span>
+                <a href="https://github.com/settings/tokens/new" target="_blank"
+                  style="font-size:0.75rem; color:var(--cedar-brown); text-decoration:underline;">Create free GitHub
+                  token ↗</a>
+              </label>
+              <div style="display:flex; gap:8px;">
+                <input type="password" id="ghTokenInput"
+                  placeholder="ghp_xxxxxxxxxxxxxxxxxxxx (Requires 'repo' or 'Contents: Read & Write' permission)"
+                  style="font-family:monospace; font-size:0.88rem; flex:1;">
+                <button type="button" class="btn-secondary-action" id="btnToggleTokenVisibility" onclick="const input = document.getElementById('ghTokenInput'); if (input) { input.type = input.type === 'password' ? 'text' : 'password'; this.innerHTML = input.type === 'password' ? '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' style=\'width:13px;height:13px;vertical-align:-2px;margin-right:4px;\'><path d=\'M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z\'/><circle cx=\'12\' cy=\'12\' r=\'3\'/></svg>Show' : '<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'currentColor\' style=\'width:13px;height:13px;vertical-align:-2px;margin-right:4px;\'><path d=\'M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24\'/><line x1=\'1\' y1=\'1\' x2=\'23\' y2=\'23\'/></svg>Hide'; }" style="padding:6px 12px; font-size:0.8rem; white-space:nowrap;">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px;"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>Show
+                </button>
+                <button type="button" class="btn-secondary-action" id="btnClearToken" onclick="clearGitHubToken()" style="padding:6px 12px; font-size:0.8rem; white-space:nowrap; color:#b91c1c; border-color:rgba(185,28,28,0.3);">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" style="width:13px;height:13px;vertical-align:-2px;margin-right:4px;"><path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M10 11v6M14 11v6"/></svg>Clear
+                </button>
+              </div>
+              <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:4px;">
+                Token is stored only in your private browser session. Leave empty if you prefer downloading/committing
+                files manually.
+              </small>
+            </div>
+
+            <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+              <button type="button" class="btn-primary-action" id="btnSaveGhConfig" onclick="saveGitHubSettings()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>Save Configuration
+              </button>
+              <button type="button" class="btn-secondary-action" id="btnTestGhConn" onclick="testGitHubSettings()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>Test GitHub Access
+              </button>
+              <button type="button" class="btn-secondary-action" id="btnCommitGh" onclick="commitToGitHubNow()"
+                style="background:#24292f; color:#fff; border-color:#24292f;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 2-2 4-6 4M6 9v2c0 2 2 4 6 4"/></svg>Commit &amp; Push to GitHub
+              </button>
+              <button type="button" class="btn-secondary-action" id="btnDownloadJson" onclick="downloadUpdatedDbJson()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download db.json
+              </button>
+              <button type="button" class="btn-secondary-action" id="btnCopyJson" onclick="copyDbJsonToClipboard()">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>Copy db.json
+              </button>
+            </div>
+
+            <div id="ghTestResult"
+              style="margin-top:16px; display:none; padding:12px 16px; border-radius:8px; font-size:0.86rem;"></div>
+          </div>
+
+          <!-- Database Stats Metrics -->
+          <div class="metrics-grid" style="margin-top:24px;">
+            <div class="metric-card">
+              <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg></div>
+              <div>
+                <div class="val" id="metricGhTreks">6</div>
+                <div class="lbl">Active Expeditions</div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg></div>
+              <div>
+                <div class="val" id="metricGhBookings">0</div>
+                <div class="lbl">Trekker Bookings</div>
+              </div>
+            </div>
+            <div class="metric-card">
+              <div class="icon-box"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+              <div>
+                <div class="val" id="metricGhSyncTime" style="font-size:1.05rem;">Active</div>
+                <div class="lbl">Database Status</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Free GitHub Static Hosting & Sync Guide -->
+          <div style="margin-top:30px; border-top:1px solid var(--border-subtle); padding-top:24px;">
+            <h3 style="font-size:1.05rem; margin-bottom:12px; display:flex; align-items:center; gap:8px;">
+              <span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:18px;height:18px;display:inline-block;vertical-align:-3px;margin-right:8px;"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg></span> How Incognito &amp; Visitors Sync 100% Free on GitHub Pages
+            </h3>
+            <div
+              style="background:#fff; border:1px solid var(--border-subtle); border-radius:12px; padding:18px 22px; font-size:0.88rem; line-height:1.7; color:var(--text-body);">
+              <ol style="margin-left:20px; padding-left:0; display:flex; flex-direction:column; gap:10px;">
+                <li>
+                  <b>Hosted for Free on GitHub Pages:</b> All visitors (including <b>Incognito tabs</b> and <b>mobile
+                    users</b>) automatically fetch live data directly from <code>data/db.json</code> in your GitHub
+                  repository with zero server, zero tokens, and zero usage limits!
+                </li>
+                <li>
+                  <b>Direct 1-Click Commit (Recommended):</b> Generate a free GitHub Token at <a
+                    href="https://github.com/settings/tokens/new" target="_blank"
+                    style="color:var(--cedar-brown); font-weight:700;">github.com/settings/tokens/new</a> with
+                  <code>repo</code> permission, paste it in the box above, and clicking <b>"Commit &amp; Push to
+                    GitHub"</b> immediately writes your latest updates directly into your repository!
+                </li>
+                <li>
+                  <b>Manual File Upload Option:</b> Click <b>"Download db.json"</b> and drag-and-drop the file into the
+                  <code>data/</code> folder in your GitHub repository.
+                </li>
+              </ol>
+              <div
+                style="margin-top:14px; background:rgba(34,197,94,0.1); border-left:4px solid #22c55e; padding:10px 14px; border-radius:6px; color:#15803d; font-size:0.82rem;">
+                <b><svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.5" style="display:inline-block;vertical-align:-1px;margin-right:4px;"><polyline points="20 6 9 17 4 12"/></svg>100% Free &amp; Unlimited:</b> No third-party subscriptions, no trial periods, and no quotas. All
+                website data is fully owned by you on GitHub!
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- ================= TAB 8: BACKUP & DATA ================= -->
+      <div class="tab-pane" id="pane-backup">
+        <div class="admin-card">
+          <div class="card-header-row">
+            <h2>Data Backup, Export &amp; Reset</h2>
+            <button class="btn-primary-action" onclick="downloadBackupJSON()">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>Download JSON Backup
+            </button>
+          </div>
+
+          <p style="color:var(--text-muted); font-size:0.9rem; margin-bottom:18px;">
+            All customizations made in this admin panel are permanently written to the project's central database
+            (<code>data/db.json</code>) and synchronized live across all browsers and devices. You can also export a
+            snapshot backup, restore from file, or reset back to default factory settings.
+          </p>
+
+          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap; margin-bottom:20px;">
+            <input type="file" id="backupFileInput" accept=".json" style="font-size:0.84rem;">
+            <button class="btn-secondary-action" onclick="importBackupJSON()">
+              Upload &amp; Restore Backup
+            </button>
+          </div>
+
+          <div class="form-group">
+            <label>Live Data JSON Snapshot</label>
+            <textarea id="backupJsonText" readonly
+              style="font-family:monospace; font-size:0.8rem; min-height:220px; background:#f1f5f9;"></textarea>
+          </div>
+
+          <div
+            style="border-top:1px solid var(--border-subtle); padding-top:20px; margin-top:24px; display:flex; justify-content:space-between; align-items:center;">
+            <div>
+              <b style="color:#b91c1c;">Danger Zone</b>
+              <p style="font-size:0.8rem; color:var(--text-muted);">Reset all treks, gallery images, and settings back
+                to original defaults.</p>
+            </div>
+            <button class="btn-icon-action danger"
+              style="width:auto; padding:8px 16px; font-weight:700; font-size:0.82rem;" onclick="resetAllData()">
+              Reset to Factory Defaults
+            </button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- =================== EXPEDITION MODAL =================== -->
+  <div class="admin-modal-overlay" id="trekModal">
+    <div class="admin-modal">
+      <div class="admin-modal-head">
+        <h3 id="trekModalTitle">Add New Expedition</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('trekModal')" aria-label="Close modal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+
+      <form id="trekForm" onsubmit="event.preventDefault(); saveTrekForm();">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Expedition Name *</label>
+            <input type="text" id="tName" required placeholder="e.g. Kashmir Serenity Luxury Houseboat &amp; Meadows">
+          </div>
+          <div class="form-group">
+            <label>Tour Category</label>
+            <select id="tCat">
+              <option value="Premium Tours">Premium Tours (Peaceful Pan-India)</option>
+              <option value="Maharashtra">Maharashtra (Sahyadri Weekend)</option>
+              <option value="Himalaya">Scenic Himalayan Trails</option>
+              <option value="Pilgrimage">Sacred &amp; Spiritual Journeys</option>
+              <option value="Desert">Royal Desert Glamping (Rajasthan)</option>
+              <option value="South India">Kerala &amp; Coastal South India</option>
+              <option value="North East">Meghalaya &amp; North East</option>
+              <option value="__custom__">+ Add Custom Category...</option>
+            </select>
+            <input type="text" id="tCatCustom" placeholder="Enter custom category name (e.g. Spiti, Kashmir)" style="display:none; margin-top:8px;">
+          </div>
+          <div class="form-group">
+            <label>Geographic Location</label>
+            <input type="text" id="tLoc" placeholder="e.g. Ladakh, India">
+          </div>
+          <div class="form-group">
+            <label>Peak / Pass Altitude</label>
+            <input type="text" id="tAltitude" placeholder="e.g. 5,416m">
+          </div>
+          <div class="form-group">
+            <label>Price (₹ INR) *</label>
+            <input type="number" id="tPrice" required min="0" placeholder="18500">
+          </div>
+          <div class="form-group">
+            <label>Duration</label>
+            <input type="text" id="tDuration" placeholder="e.g. 12 Days">
+          </div>
+          <div class="form-group">
+            <label>Difficulty</label>
+            <select id="tDifficulty">
+              <option value="Challenging">Challenging</option>
+              <option value="Moderate">Moderate</option>
+              <option value="Easy">Easy</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Slot Status</label>
+            <select id="tStatus">
+              <option value="open">Open (Slots Available)</option>
+              <option value="few">Few Slots Left</option>
+              <option value="full">Sold Out</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Available Slots</label>
+            <input type="number" id="tSlots" min="0" max="50" value="8">
+          </div>
+          <div class="form-group">
+            <label>Total Capacity</label>
+            <input type="number" id="tTotalSlots" min="1" max="50" value="12">
+          </div>
+          <div class="form-group">
+            <label>Departure Briefing Time</label>
+            <input type="text" id="tTime" placeholder="e.g. 06:00 AM departure">
+          </div>
+          <div class="form-group" style="grid-column: span 2;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+              <label style="margin:0; font-weight:700;">Expedition Cover Image URL</label>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center;">
+              <input type="text" id="tImg" placeholder="https://..." oninput="updateTrekImagePreview(this.value)" style="flex:1;">
+              <label class="btn-secondary-action" style="cursor:pointer; padding:7px 12px; font-size:0.8rem; white-space:nowrap; display:inline-flex; align-items:center; gap:5px; margin:0;" title="Upload photo directly from your computer or phone">
+                <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+                Upload Photo
+                <input type="file" accept="image/*" style="display:none;" onchange="handleDirectPhotoUpload(this, 'tImg', 'tImgPreview', 'tImgPreviewText')">
+              </label>
+            </div>
+            <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:4px;">
+              Direct image URL or upload directly from your device (Google Drive / CDN).
+            </small>
+            <div id="tImgPreviewWrap" style="margin-top:8px; border-radius:8px; overflow:hidden; border:1px solid #e2e8f0; background:#f8fafc; padding:6px 10px; display:flex; align-items:center; gap:12px;">
+              <img id="tImgPreview" src="" alt="Preview" style="width:64px; height:44px; object-fit:cover; border-radius:5px; background:#e2e8f0;">
+              <span id="tImgPreviewText" style="font-size:0.78rem; color:var(--text-muted);">Preview will show here</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Upcoming Departure Dates (comma-separated)</label>
+          <input type="text" id="tDates" placeholder="15 Jun 2026, 03 Aug 2026, 21 Sep 2026">
+        </div>
+
+        <div class="form-group">
+          <label>Short Pitch Summary</label>
+          <input type="text" id="tShort" placeholder="A 1-sentence teaser for card view...">
+        </div>
+
+        <div class="form-group">
+          <label>Full Expedition Narrative Description</label>
+          <textarea id="tDesc" placeholder="Complete narrative overview..."></textarea>
+        </div>
+
+        <!-- Facilities Builder -->
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="margin:0;">Included Amenities &amp; Logistics</label>
+            <button type="button" class="btn-secondary-action" style="padding:4px 10px; font-size:0.75rem;"
+              onclick="addFacilityRow()">+ Add Amenity</button>
+          </div>
+          <div id="tFacilitiesWrap"></div>
+        </div>
+
+        <!-- Itinerary Builder -->
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
+            <label style="margin:0;">Day-by-Day Timeline Itinerary</label>
+            <button type="button" class="btn-secondary-action" style="padding:4px 10px; font-size:0.75rem;"
+              onclick="addItineraryRow()">+ Add Itinerary Milestone</button>
+          </div>
+          <div id="tItineraryWrap"></div>
+        </div>
+
+        <input type="hidden" id="tSeed" value="">
+
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+          <button type="button" class="btn-secondary-action" onclick="closeAdminModal('trekModal')">Cancel</button>
+          <button type="submit" class="btn-primary-action">Save Expedition Route</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- =================== GALLERY MODAL =================== -->
+  <div class="admin-modal-overlay" id="galleryModal">
+    <div class="admin-modal" style="max-width:520px;">
+      <div class="admin-modal-head">
+        <h3 id="galleryModalTitle">Add Field Photograph</h3>
+        <button class="admin-modal-close" onclick="closeAdminModal('galleryModal')" aria-label="Close modal"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+
+      <form id="galleryForm" onsubmit="event.preventDefault(); saveGalleryForm();">
+        <div class="form-group">
+          <label>Photograph Title / Moment</label>
+          <input type="text" id="gTitle" required placeholder="e.g. Kang Yatse II Summit Sunrise">
+        </div>
+        <div class="form-group">
+          <label>Location</label>
+          <input type="text" id="gLoc" required placeholder="e.g. Markha Valley, Ladakh, India">
+        </div>
+        <div class="form-group">
+          <label>Terrain Category</label>
+          <select id="gCat">
+            <option value="Premium Tours">Premium Tours</option>
+            <option value="Maharashtra">Maharashtra (Sahyadri)</option>
+            <option value="Himalaya">Himalaya</option>
+            <option value="Pilgrimage">Pilgrimage</option>
+            <option value="Desert">Desert</option>
+            <option value="South India">South India</option>
+            <option value="__custom__">+ Add Custom Category...</option>
+          </select>
+          <input type="text" id="gCatCustom" placeholder="Enter custom terrain category" style="display:none; margin-top:8px;">
+        </div>
+        <div class="form-group">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <label style="margin:0; font-weight:700;">Photograph Image URL</label>
+          </div>
+          <div style="display:flex; gap:8px; align-items:center;">
+            <input type="text" id="gImg" required placeholder="https://..." oninput="updateGalleryImagePreview(this.value)" style="flex:1;">
+            <label class="btn-secondary-action" style="cursor:pointer; padding:7px 12px; font-size:0.8rem; white-space:nowrap; display:inline-flex; align-items:center; gap:5px; margin:0;" title="Upload photo directly from your computer or phone">
+              <svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+              Upload Photo
+              <input type="file" accept="image/*" style="display:none;" onchange="handleDirectPhotoUpload(this, 'gImg', 'gImgPreview', 'gImgPreviewText')">
+            </label>
+          </div>
+          <small style="color:var(--text-muted); font-size:0.78rem; display:block; margin-top:4px;">
+            Direct image URL or upload directly from your device (Google Drive / CDN).
+          </small>
+          <div id="gImgPreviewWrap" style="margin-top:10px; border-radius:8px; overflow:hidden; border:1px solid #e2e8f0; background:#f8fafc; padding:8px 12px; display:flex; align-items:center; gap:12px;">
+            <img id="gImgPreview" src="" alt="Preview" style="width:72px; height:50px; object-fit:cover; border-radius:6px; background:#e2e8f0;">
+            <div id="gImgPreviewText" style="font-size:0.78rem; color:var(--text-muted);">Live preview will show here</div>
+          </div>
+        </div>
+        <input type="hidden" id="gSeed" value="">
+
+        <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:20px;">
+          <button type="button" class="btn-secondary-action" onclick="closeAdminModal('galleryModal')">Cancel</button>
+          <button type="submit" class="btn-primary-action">Save Photograph</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/github-config.js"></script>
+  <script src="js/data.js?v=20261113_v1"></script>
+  <script src="js/admin.js?v=20261113_v1"></script>
+</body>
+
+</html>

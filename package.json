@@ -1,0 +1,19 @@
+{
+  "name": "original-site",
+  "version": "1.0.0",
+  "description": "Dhakkan's Tours & Travels — Peaceful Journeys, Sacred Yatras & Scenic Treks across India",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "trekking",
+    "travel",
+    "expeditions",
+    "booking",
+    "admin"
+  ],
+  "author": "Dhakkan's Expeditions",
+  "license": "ISC"
+}

@@ -1,0 +1,20 @@
+# Secrets & Environment variables
+.env
+.env.*
+*.local
+
+# Node dependencies & logs
+node_modules/
+*.log
+npm-debug.log*
+
+# Operating System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDEs & Editors
+.vscode/
+.idea/
+*.swp
+
