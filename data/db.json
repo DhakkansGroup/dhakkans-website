@@ -17,12 +17,20 @@
     "philosophyDesc": "We replace chaotic itineraries and crowded tourist rush with mindful pacing, handpicked comfortable stays, and soulful natural beauty across India."
   },
   "treks": [],
-  "gallery": [],
+  "gallery": [
+    {
+      "title": "First Trek",
+      "loc": "Ghangad",
+      "cat": "Himalaya",
+      "img": "https://lh3.googleusercontent.com/d/1zFgJ-MbEzfTeSdXDb-OdBh6yQStMwui6",
+      "seed": "gmwp4pow1"
+    }
+  ],
   "bookings": [],
   "inquiries": [],
   "auth": {
     "user": "admin",
     "passHash": "2793636809a93caedf7717a9ae71c3d358e3958b76c7d6a9dda1284b0b1384ea"
   },
-  "lastUpdated": "2026-11-20T14:58:24.027Z"
+  "lastUpdated": "2026-11-20T15:23:36.385Z"
 }
