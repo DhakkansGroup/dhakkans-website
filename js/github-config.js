@@ -13,7 +13,7 @@ window.DHAKKANS_GITHUB_CONFIG = {
   owner: "DhakkansGroup",
   
   // Your GitHub Repository Name:
-  repo: "original-site",
+  repo: "dhakkans-website",
   
   // Branch (typically 'main' or 'master'):
   branch: "main",

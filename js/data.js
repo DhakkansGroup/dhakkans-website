@@ -64,7 +64,7 @@ try {
 // Get Active GitHub Configuration
 function getActiveGitHubConfig() {
   let owner = "DhakkansGroup";
-  let repo = "original-site";
+  let repo = "dhakkans-website";
   let branch = "main";
   let path = "data/db.json";
   let token = "";
@@ -72,6 +72,10 @@ function getActiveGitHubConfig() {
   try {
     owner = localStorage.getItem('dhakkans_gh_owner') || (window.DHAKKANS_GITHUB_CONFIG?.owner || owner);
     repo = localStorage.getItem('dhakkans_gh_repo') || (window.DHAKKANS_GITHUB_CONFIG?.repo || repo);
+    if (repo === 'original-site') {
+      repo = 'dhakkans-website';
+      localStorage.setItem('dhakkans_gh_repo', 'dhakkans-website');
+    }
     branch = localStorage.getItem('dhakkans_gh_branch') || (window.DHAKKANS_GITHUB_CONFIG?.branch || branch);
     path = localStorage.getItem('dhakkans_gh_path') || (window.DHAKKANS_GITHUB_CONFIG?.path || path);
     token = localStorage.getItem('dhakkans_gh_token') || (window.DHAKKANS_GITHUB_CONFIG?.token || token);
@@ -94,13 +98,15 @@ function loadInitialCache() {
     const storedVersion = localStorage.getItem('dhakkans_data_version');
     if (storedVersion !== CURRENT_DATA_VERSION) {
       localStorage.setItem('dhakkans_data_version', CURRENT_DATA_VERSION);
-      localStorage.setItem('dhakkans_settings', JSON.stringify(DEFAULT_SETTINGS));
-      localStorage.setItem('dhakkans_treks', JSON.stringify([]));
-      localStorage.setItem('dhakkans_gallery', JSON.stringify([]));
-      _cache.settings = { ...DEFAULT_SETTINGS };
-      _cache.treks = [];
-      _cache.gallery = [];
-      return;
+      if (!localStorage.getItem('dhakkans_settings')) {
+        localStorage.setItem('dhakkans_settings', JSON.stringify(DEFAULT_SETTINGS));
+      }
+      if (!localStorage.getItem('dhakkans_treks')) {
+        localStorage.setItem('dhakkans_treks', JSON.stringify([]));
+      }
+      if (!localStorage.getItem('dhakkans_gallery')) {
+        localStorage.setItem('dhakkans_gallery', JSON.stringify([]));
+      }
     }
   } catch (e) { }
 
@@ -183,11 +189,15 @@ const DB = {
     return getActiveGitHubConfig();
   },
 
-  setGitHubConfig(cfg) {
+  setGitHubConfig(cfg, triggerSync = false) {
     if (!cfg) return;
     try {
       if (cfg.owner !== undefined) localStorage.setItem('dhakkans_gh_owner', cfg.owner.trim());
-      if (cfg.repo !== undefined) localStorage.setItem('dhakkans_gh_repo', cfg.repo.trim());
+      if (cfg.repo !== undefined) {
+        let r = cfg.repo.trim();
+        if (r === 'original-site') r = 'dhakkans-website';
+        localStorage.setItem('dhakkans_gh_repo', r);
+      }
       if (cfg.branch !== undefined) localStorage.setItem('dhakkans_gh_branch', cfg.branch.trim());
       if (cfg.path !== undefined) localStorage.setItem('dhakkans_gh_path', cfg.path.trim());
       if (cfg.token !== undefined) {
@@ -203,7 +213,9 @@ const DB = {
       }
     } catch (e) { }
 
-    this.syncFromGitHub(true);
+    if (triggerSync) {
+      this.syncFromGitHub(true);
+    }
     return true;
   },
 
@@ -283,10 +295,8 @@ const DB = {
         endpoints.push('http://localhost:3000/api/data');
       }
 
-      // Only attempt remote GitHub raw if hosted on GitHub Pages (github.io) or if a custom repo/token is set
-      const isGitHubPages = typeof window !== 'undefined' && window.location && window.location.hostname.includes('github.io');
-      const cfg = getActiveGitHubConfig();
-      if (isGitHubPages || (cfg && cfg.token)) {
+      // Remote GitHub raw endpoint with cache-busting as real-time fallback for all visitors
+      if (owner && repo) {
         endpoints.push(`https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${path}${cacheBust}`);
       }
 
@@ -311,12 +321,32 @@ const DB = {
             _lastDataFingerprint = fingerprint;
 
             if (hasChanged || force) {
+              const remoteTime = data.lastUpdated ? new Date(data.lastUpdated).getTime() : 0;
+              const localTime = _cache.lastUpdated ? new Date(_cache.lastUpdated).getTime() : 0;
+              const localHasTreks = Array.isArray(_cache.treks) && _cache.treks.length > 0;
+              const remoteHasTreks = Array.isArray(data.treks) && data.treks.length > 0;
+
               if (data.settings) _cache.settings = { ...DEFAULT_SETTINGS, ...data.settings };
-              if (data.treks && Array.isArray(data.treks)) _cache.treks = data.treks;
-              if (data.gallery && Array.isArray(data.gallery)) _cache.gallery = data.gallery;
+
+              // SAFEGUARD: Do not wipe local non-empty treks if remote has empty array or is stale
+              if (localHasTreks && !remoteHasTreks && localTime >= remoteTime) {
+                // Preserve local treks
+              } else if (data.treks && Array.isArray(data.treks)) {
+                _cache.treks = data.treks;
+              }
+
+              const localHasGallery = Array.isArray(_cache.gallery) && _cache.gallery.length > 0;
+              const remoteHasGallery = Array.isArray(data.gallery) && data.gallery.length > 0;
+              if (localHasGallery && !remoteHasGallery && localTime >= remoteTime) {
+                // Preserve local gallery
+              } else if (data.gallery && Array.isArray(data.gallery)) {
+                _cache.gallery = data.gallery;
+              }
+
               if (data.bookings && Array.isArray(data.bookings)) _cache.bookings = data.bookings;
               if (data.inquiries && Array.isArray(data.inquiries)) _cache.inquiries = data.inquiries;
               if (data.auth) _cache.auth = { ...DEFAULT_AUTH, ...data.auth };
+              if (data.lastUpdated) _cache.lastUpdated = data.lastUpdated;
 
               // Save to localStorage for instant startup
               try {
@@ -403,7 +433,7 @@ const DB = {
 
       // 2. Commit file via GitHub API
       const commitBody = {
-        message: customMessage || `Update website database via Admin Panel [skip ci]`,
+        message: customMessage || `Update website database via Admin Panel`,
         content: base64Content,
         branch: branch
       };

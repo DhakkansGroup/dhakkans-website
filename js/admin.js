@@ -994,7 +994,7 @@ function renderGitHubTab(forceUpdateInputs = false) {
     ownerInput.value = config.owner || 'DhakkansGroup';
   }
   if (repoInput && (forceUpdateInputs || (!repoInput.value && document.activeElement !== repoInput))) {
-    repoInput.value = config.repo || 'original-site';
+    repoInput.value = config.repo || 'dhakkans-website';
   }
   if (branchInput && (forceUpdateInputs || (!branchInput.value && document.activeElement !== branchInput))) {
     branchInput.value = config.branch || 'main';
@@ -1042,7 +1042,7 @@ function renderGitHubTab(forceUpdateInputs = false) {
 
 function saveGitHubSettings() {
   const owner = (document.getElementById('ghOwnerInput')?.value || 'DhakkansGroup').trim();
-  const repo = (document.getElementById('ghRepoInput')?.value || 'original-site').trim();
+  const repo = (document.getElementById('ghRepoInput')?.value || 'dhakkans-website').trim();
   const branch = (document.getElementById('ghBranchInput')?.value || 'main').trim();
   const token = (document.getElementById('ghTokenInput')?.value || '').trim();
 
@@ -1051,7 +1051,7 @@ function saveGitHubSettings() {
     return;
   }
 
-  DB.setGitHubConfig({ owner, repo, branch, token });
+  DB.setGitHubConfig({ owner, repo, branch, token }, false);
   showToast('GitHub configuration saved permanently in your session!', 'success');
   renderGitHubTab(true);
   updateSyncStatusUI();
@@ -1073,12 +1073,12 @@ function clearGitHubToken() {
 
 async function testGitHubSettings() {
   const owner = (document.getElementById('ghOwnerInput')?.value || 'DhakkansGroup').trim();
-  const repo = (document.getElementById('ghRepoInput')?.value || 'original-site').trim();
+  const repo = (document.getElementById('ghRepoInput')?.value || 'dhakkans-website').trim();
   const branch = (document.getElementById('ghBranchInput')?.value || 'main').trim();
   const token = (document.getElementById('ghTokenInput')?.value || '').trim();
 
   // Save config immediately so token is never lost
-  DB.setGitHubConfig({ owner, repo, branch, token });
+  DB.setGitHubConfig({ owner, repo, branch, token }, false);
 
   const resBox = document.getElementById('ghTestResult');
   if (resBox) {
@@ -1110,7 +1110,7 @@ async function testGitHubSettings() {
 
 async function commitToGitHubNow() {
   const owner = (document.getElementById('ghOwnerInput')?.value || 'DhakkansGroup').trim();
-  const repo = (document.getElementById('ghRepoInput')?.value || 'original-site').trim();
+  const repo = (document.getElementById('ghRepoInput')?.value || 'dhakkans-website').trim();
   const branch = (document.getElementById('ghBranchInput')?.value || 'main').trim();
   const token = (document.getElementById('ghTokenInput')?.value || '').trim();
 
@@ -1121,8 +1121,8 @@ async function commitToGitHubNow() {
     return;
   }
 
-  // Persist config
-  DB.setGitHubConfig({ owner, repo, branch, token });
+  // Persist config without triggering a sync that could overwrite in-memory edits
+  DB.setGitHubConfig({ owner, repo, branch, token }, false);
 
   const btn = document.getElementById('btnCommitGh');
   if (btn) {
@@ -1130,7 +1130,7 @@ async function commitToGitHubNow() {
     btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:6px;"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 2-2 4-6 4M6 9v2c0 2 2 4 6 4"/></svg>Committing to GitHub...';
   }
 
-  const commitRes = await DB.commitToGitHub('Update website database via Admin Operations Desk [skip ci]');
+  const commitRes = await DB.commitToGitHub('Update website database via Admin Operations Desk');
   if (btn) {
     btn.disabled = false;
     btn.innerHTML = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" style="vertical-align:-2px;margin-right:6px;"><circle cx="12" cy="18" r="3"/><circle cx="6" cy="6" r="3"/><circle cx="18" cy="6" r="3"/><path d="M18 9v2c0 2-2 4-6 4M6 9v2c0 2 2 4 6 4"/></svg>Commit &amp; Push to GitHub';
